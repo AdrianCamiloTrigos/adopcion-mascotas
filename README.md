@@ -6,7 +6,7 @@ La Fundación Huellas de Esperanza tenía la información de sus animales y de l
 
 | Componente | URL desplegada |
 |---|---|
-| Frontend | `https://huellas-frontend.onrender.com` *(reemplazar con la URL real)* |
+| Frontend | `https://huellas-frontend-mfrk.onrender.com/`|
 | API Mascotas (Swagger) | `https://huellas-api-mascotas.onrender.com/docs` |
 | API Adopciones (Swagger) | `https://huellas-api-adopciones.onrender.com/docs` |
 
