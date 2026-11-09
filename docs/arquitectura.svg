@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760" font-family="Nunito, Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2d2520"/>
+    </marker>
+    <marker id="flechaN" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d9622b"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="760" fill="#fbf6ef"/>
+  <text x="40" y="48" font-size="26" font-weight="700" fill="#2d2520">Huellas de Esperanza · Arquitectura orientada a servicios</text>
+  <text x="40" y="74" font-size="15" fill="#6f6259">Dos servicios independientes, cada uno dueño de su tabla, comunicados por HTTP/REST con JSON</text>
+
+  <!-- Usuario -->
+  <rect x="490" y="100" width="220" height="56" rx="28" fill="#ffffff" stroke="#2d2520" stroke-width="2"/>
+  <text x="600" y="134" font-size="17" font-weight="700" text-anchor="middle" fill="#2d2520">👤 Adoptante / Fundación</text>
+
+  <!-- Nube Render -->
+  <rect x="40" y="190" width="1120" height="330" rx="20" fill="#ffffff" stroke="#c9b9a8" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="62" y="218" font-size="14" font-weight="700" fill="#8a7a6c">☁ RENDER (despliegue en la nube, HTTPS)</text>
+
+  <!-- Frontend -->
+  <rect x="440" y="235" width="320" height="80" rx="14" fill="#2d2520"/>
+  <text x="600" y="268" font-size="18" font-weight="700" text-anchor="middle" fill="#ffffff">Frontend web</text>
+  <text x="600" y="293" font-size="14" text-anchor="middle" fill="#e8ddd2">HTML + CSS + JavaScript (fetch)</text>
+
+  <!-- API Mascotas -->
+  <rect x="90" y="380" width="360" height="116" rx="14" fill="#fde3cf" stroke="#d9622b" stroke-width="2"/>
+  <text x="270" y="412" font-size="19" font-weight="700" text-anchor="middle" fill="#2d2520">API 1 · Mascotas</text>
+  <text x="270" y="436" font-size="14" text-anchor="middle" fill="#2d2520">FastAPI · Swagger en /docs</text>
+  <text x="270" y="460" font-size="13" text-anchor="middle" fill="#6f6259">CRUD de mascotas · disponibilidad</text>
+  <text x="270" y="480" font-size="13" text-anchor="middle" fill="#6f6259">estados: disponible → en_proceso → adoptada</text>
+
+  <!-- API Adopciones -->
+  <rect x="750" y="380" width="360" height="116" rx="14" fill="#e3e8fb" stroke="#4b5fb0" stroke-width="2"/>
+  <text x="930" y="412" font-size="19" font-weight="700" text-anchor="middle" fill="#2d2520">API 2 · Adopciones</text>
+  <text x="930" y="436" font-size="14" text-anchor="middle" fill="#2d2520">FastAPI · Swagger en /docs</text>
+  <text x="930" y="460" font-size="13" text-anchor="middle" fill="#6f6259">registrar · aprobar · rechazar solicitudes</text>
+  <text x="930" y="480" font-size="13" text-anchor="middle" fill="#6f6259">compensación si Mascotas falla</text>
+
+  <!-- Usuario -> Frontend -->
+  <line x1="600" y1="156" x2="600" y2="231" stroke="#2d2520" stroke-width="2" marker-end="url(#flecha)"/>
+
+  <!-- Frontend -> APIs -->
+  <path d="M470 315 L330 376" fill="none" stroke="#2d2520" stroke-width="2" marker-end="url(#flecha)"/>
+  <text x="395" y="340" font-size="13" text-anchor="end" fill="#2d2520">GET /mascotas · POST /mascotas</text>
+  <path d="M730 315 L870 376" fill="none" stroke="#2d2520" stroke-width="2" marker-end="url(#flecha)"/>
+  <text x="805" y="340" font-size="13" fill="#2d2520">POST /solicitudes · PATCH aprobar/rechazar</text>
+
+  <!-- Adopciones -> Mascotas (integración) -->
+  <line x1="746" y1="420" x2="456" y2="420" stroke="#d9622b" stroke-width="3" marker-end="url(#flechaN)"/>
+  <text x="600" y="405" font-size="14" font-weight="700" text-anchor="middle" fill="#d9622b">HTTP/REST + JSON</text>
+  <text x="600" y="442" font-size="12.5" text-anchor="middle" fill="#2d2520">GET /mascotas/{id}</text>
+  <text x="600" y="460" font-size="12.5" text-anchor="middle" fill="#2d2520">PATCH /mascotas/{id}/estado</text>
+  <text x="600" y="478" font-size="12" text-anchor="middle" fill="#6f6259">cabecera X-Service-Key</text>
+
+  <!-- Supabase -->
+  <rect x="40" y="565" width="1120" height="170" rx="20" fill="#e2f2df" stroke="#3a8a4f" stroke-width="2"/>
+  <text x="600" y="597" font-size="14" font-weight="700" text-anchor="middle" fill="#2f6e3f">🗄 SUPABASE · PostgreSQL (RLS activo, acceso con service key)</text>
+
+  <rect x="110" y="615" width="320" height="100" rx="12" fill="#ffffff" stroke="#3a8a4f" stroke-width="1.5"/>
+  <text x="270" y="643" font-size="16" font-weight="700" text-anchor="middle" fill="#2d2520">tabla mascotas</text>
+  <text x="270" y="667" font-size="12.5" text-anchor="middle" fill="#6f6259">id · nombre · especie · raza · sexo</text>
+  <text x="270" y="686" font-size="12.5" text-anchor="middle" fill="#6f6259">edad_meses · descripcion · foto_url · estado</text>
+
+  <rect x="770" y="615" width="320" height="100" rx="12" fill="#ffffff" stroke="#3a8a4f" stroke-width="1.5"/>
+  <text x="930" y="643" font-size="16" font-weight="700" text-anchor="middle" fill="#2d2520">tabla solicitudes</text>
+  <text x="930" y="667" font-size="12.5" text-anchor="middle" fill="#6f6259">id · mascota_id · solicitante · documento</text>
+  <text x="930" y="686" font-size="12.5" text-anchor="middle" fill="#6f6259">email · telefono · motivo · estado</text>
+  <text x="930" y="705" font-size="12" text-anchor="middle" fill="#b84c1b">índice único: 1 aprobada por mascota</text>
+
+  <text x="600" y="660" font-size="13" text-anchor="middle" fill="#2f6e3f">sin llave foránea entre tablas:</text>
+  <text x="600" y="678" font-size="13" text-anchor="middle" fill="#2f6e3f">la relación se valida por la API</text>
+
+  <!-- APIs -> tablas -->
+  <line x1="270" y1="496" x2="270" y2="611" stroke="#2d2520" stroke-width="2" marker-end="url(#flecha)"/>
+  <text x="282" y="550" font-size="12.5" fill="#2d2520">supabase-py</text>
+  <line x1="930" y1="496" x2="930" y2="611" stroke="#2d2520" stroke-width="2" marker-end="url(#flecha)"/>
+  <text x="942" y="550" font-size="12.5" fill="#2d2520">supabase-py</text>
+</svg>

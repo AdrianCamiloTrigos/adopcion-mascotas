@@ -1,0 +1,65 @@
+# Blueprint de Render: despliega los tres servicios desde este repositorio.
+# Render > New > Blueprint > selecciona el repo. Te pedirá los valores marcados con sync: false.
+services:
+  # ---------------- API 1: Mascotas ----------------
+  - type: web
+    name: huellas-api-mascotas
+    runtime: python
+    plan: free
+    rootDir: api-mascotas
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: SERVICE_API_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: "*"
+
+  # ---------------- API 2: Adopciones ----------------
+  - type: web
+    name: huellas-api-adopciones
+    runtime: python
+    plan: free
+    rootDir: api-adopciones
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: MASCOTAS_API_URL
+        sync: false          # ej: https://huellas-api-mascotas.onrender.com
+      - key: SERVICE_API_KEY  # la misma clave que generó la API de Mascotas
+        fromService:
+          type: web
+          name: huellas-api-mascotas
+          envVarKey: SERVICE_API_KEY
+      - key: HTTP_TIMEOUT
+        value: "60"
+      - key: CORS_ORIGINS
+        value: "*"
+
+  # ---------------- Frontend (sitio estático) ----------------
+  - type: web
+    name: huellas-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: >-
+      echo "window.APP_CONFIG = { MASCOTAS_API: '$MASCOTAS_API', ADOPCIONES_API: '$ADOPCIONES_API' };" > config.js
+    staticPublishPath: .
+    envVars:
+      - key: MASCOTAS_API
+        sync: false          # ej: https://huellas-api-mascotas.onrender.com
+      - key: ADOPCIONES_API
+        sync: false          # ej: https://huellas-api-adopciones.onrender.com

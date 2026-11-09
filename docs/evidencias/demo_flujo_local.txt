@@ -1,0 +1,58 @@
+======================================================================
+DEMO · Proceso completo de adopción (API Mascotas ↔ API Adopciones)
+API Mascotas:   http://localhost:8001
+API Adopciones: http://localhost:8002
+======================================================================
+
+── Paso 1: Adopciones verifica que Mascotas está en línea
+   GET http://localhost:8002/salud
+   ← 200  {"servicio": "api-adopciones", "estado": "ok", "api_mascotas": {"url": "http://localhost:8001", "estado": "ok"}}
+
+── Paso 2: Registrar una mascota (API 1)
+   POST http://localhost:8001/mascotas
+   body: {"nombre": "Firulais-420", "especie": "perro", "raza": "Criollo", "sexo": "macho", "edad_meses": 20, "descripcion": "Mascota creada para la demostración"}
+   ← 201  {"nombre": "Firulais-420", "especie": "perro", "raza": "Criollo", "sexo": "macho", "edad_meses": 20, "descripcion": "Mascota creada para la demostración", "foto_url": null, "id": 14, "estado": "disponible", "creado_en": "2026-11-08T17:00:44.286826+00:00", "actualizado_en": "2026-11-08T17:00:44.28684…
+
+── Paso 3: Consultar disponibilidad
+   GET http://localhost:8001/mascotas/14/disponibilidad
+   ← 200  {"mascota_id": 14, "estado": "disponible", "disponible_para_solicitud": true}
+
+── Paso 4: Primera solicitud (API 2 consulta a API 1 y la pasa a en_proceso)
+   POST http://localhost:8002/solicitudes
+   body: {"mascota_id": 14, "nombre_solicitante": "Camilo Quintero", "documento": "4667082386", "email": "camilo@gmail.com", "telefono": "3157894512", "ciudad": "Ocaña", "motivo": "Tengo espacio y tiempo para cuidar a la mascota."}
+   ← 201  {"id": 16, "mascota_id": 14, "nombre_solicitante": "Camilo Quintero", "documento": "4667082386", "email": "camilo@gmail.com", "telefono": "3157894512", "ciudad": "Ocaña", "motivo": "Tengo espacio y tiempo para cuidar a la mascota.", "estado": "pendiente", "observacion": null, "creado_en": "2026-11-0…
+
+── Paso 5: Segunda solicitud para la misma mascota
+   POST http://localhost:8002/solicitudes
+   body: {"mascota_id": 14, "nombre_solicitante": "Yeimy Carrascal", "documento": "3059004181", "email": "yeimy@gmail.com", "telefono": "3157894512", "ciudad": "Ocaña", "motivo": "Tengo espacio y tiempo para cuidar a la mascota."}
+   ← 201  {"id": 17, "mascota_id": 14, "nombre_solicitante": "Yeimy Carrascal", "documento": "3059004181", "email": "yeimy@gmail.com", "telefono": "3157894512", "ciudad": "Ocaña", "motivo": "Tengo espacio y tiempo para cuidar a la mascota.", "estado": "pendiente", "observacion": null, "creado_en": "2026-11-08…
+
+── Paso 6: La mascota ahora está en_proceso
+   GET http://localhost:8001/mascotas/14
+   ← 200  {"nombre": "Firulais-420", "especie": "perro", "raza": "Criollo", "sexo": "macho", "edad_meses": 20, "descripcion": "Mascota creada para la demostración", "foto_url": null, "id": 14, "estado": "en_proceso", "creado_en": "2026-11-08T17:00:44.286826+00:00", "actualizado_en": "2026-11-08T17:00:44.32190…
+
+── Paso 7: Aprobar la primera solicitud
+   PATCH http://localhost:8002/solicitudes/16/aprobar
+   body: {"observacion": "Visita domiciliaria aprobada"}
+   ← 200  {"solicitud": {"id": 16, "mascota_id": 14, "nombre_solicitante": "Camilo Quintero", "documento": "4667082386", "email": "camilo@gmail.com", "telefono": "3157894512", "ciudad": "Ocaña", "motivo": "Tengo espacio y tiempo para cuidar a la mascota.", "estado": "aprobada", "observacion": "Visita domicili…
+
+── Paso 8: La mascota quedó adoptada
+   GET http://localhost:8001/mascotas/14
+   ← 200  {"nombre": "Firulais-420", "especie": "perro", "raza": "Criollo", "sexo": "macho", "edad_meses": 20, "descripcion": "Mascota creada para la demostración", "foto_url": null, "id": 14, "estado": "adoptada", "creado_en": "2026-11-08T17:00:44.286826+00:00", "actualizado_en": "2026-11-08T17:00:44.371228+…
+
+── Paso 9: La segunda solicitud se rechazó sola
+   GET http://localhost:8002/solicitudes/17
+   ← 200  {"id": 17, "mascota_id": 14, "nombre_solicitante": "Yeimy Carrascal", "documento": "3059004181", "email": "yeimy@gmail.com", "telefono": "3157894512", "ciudad": "Ocaña", "motivo": "Tengo espacio y tiempo para cuidar a la mascota.", "estado": "rechazada", "observacion": "Rechazada automáticamente: Fi…
+
+── Paso 10: Intentar aprobar la segunda (debe fallar con 409)
+   PATCH http://localhost:8002/solicitudes/17/aprobar
+   ← 409  {"detail": "La solicitud 17 ya fue rechazada y no se puede modificar."}
+
+── Paso 11: Nueva solicitud para una mascota adoptada (debe fallar con 409)
+   POST http://localhost:8002/solicitudes
+   body: {"mascota_id": 14, "nombre_solicitante": "Diego Pacheco", "documento": "2658425626", "email": "diego@gmail.com", "telefono": "3157894512", "ciudad": "Ocaña", "motivo": "Tengo espacio y tiempo para cuidar a la mascota."}
+   ← 409  {"detail": "Firulais-420 ya fue adoptada"}
+
+======================================================================
+RESULTADO: ✅ proceso completo correcto
+======================================================================

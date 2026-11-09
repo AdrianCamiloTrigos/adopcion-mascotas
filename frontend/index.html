@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Huellas de Esperanza · Adopción responsable</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="marca">
+      <span class="logo">🐾</span>
+      <div>
+        <h1>Huellas de Esperanza</h1>
+        <p>Plataforma de adopción responsable</p>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab activo" data-vista="adoptar">Adoptar</button>
+      <button class="tab" data-vista="solicitudes">Solicitudes <span id="contador-pendientes" class="contador" hidden></span></button>
+      <button class="tab" data-vista="registrar">Registrar mascota</button>
+      <button class="tab" data-vista="sistema">Sistema</button>
+    </nav>
+  </header>
+
+  <div id="aviso-despertar" class="aviso" hidden>
+    Los servidores gratuitos se estaban durmiendo y tardan cerca de un minuto en despertar. Ya casi…
+  </div>
+
+  <main>
+    <!-- ============ ADOPTAR ============ -->
+    <section id="vista-adoptar" class="vista activa">
+      <div class="encabezado-vista">
+        <div>
+          <h2>Encuentra a tu compañero</h2>
+          <p class="sub">Todas las mascotas están vacunadas y esperan un hogar responsable.</p>
+        </div>
+        <div class="filtros">
+          <select id="filtro-especie" aria-label="Especie">
+            <option value="">Todas las especies</option>
+            <option value="perro">Perros</option>
+            <option value="gato">Gatos</option>
+            <option value="otro">Otros</option>
+          </select>
+          <select id="filtro-estado" aria-label="Estado">
+            <option value="">Todos los estados</option>
+            <option value="disponible">Disponibles</option>
+            <option value="en_proceso">En proceso</option>
+            <option value="adoptada">Adoptadas</option>
+          </select>
+        </div>
+      </div>
+      <div id="grid-mascotas" class="grid"></div>
+    </section>
+
+    <!-- ============ SOLICITUDES ============ -->
+    <section id="vista-solicitudes" class="vista">
+      <div class="encabezado-vista">
+        <div>
+          <h2>Solicitudes de adopción</h2>
+          <p class="sub">Al aprobar, la mascota queda adoptada y las demás solicitudes pendientes se rechazan solas.</p>
+        </div>
+        <div class="chips" id="chips-solicitudes">
+          <button class="chip activo" data-estado="">Todas</button>
+          <button class="chip" data-estado="pendiente">Pendientes</button>
+          <button class="chip" data-estado="aprobada">Aprobadas</button>
+          <button class="chip" data-estado="rechazada">Rechazadas</button>
+        </div>
+      </div>
+      <div id="lista-solicitudes" class="lista"></div>
+    </section>
+
+    <!-- ============ REGISTRAR ============ -->
+    <section id="vista-registrar" class="vista">
+      <div class="encabezado-vista">
+        <div>
+          <h2>Registrar una mascota</h2>
+          <p class="sub">Queda disponible para adopción apenas se guarda.</p>
+        </div>
+      </div>
+      <form id="form-mascota" class="tarjeta formulario">
+        <div class="fila">
+          <label>Nombre *<input name="nombre" required maxlength="60" /></label>
+          <label>Especie *
+            <select name="especie" required>
+              <option value="perro">Perro</option>
+              <option value="gato">Gato</option>
+              <option value="otro">Otro</option>
+            </select>
+          </label>
+        </div>
+        <div class="fila">
+          <label>Raza<input name="raza" maxlength="60" /></label>
+          <label>Sexo
+            <select name="sexo">
+              <option value="">Sin dato</option>
+              <option value="macho">Macho</option>
+              <option value="hembra">Hembra</option>
+            </select>
+          </label>
+          <label>Edad (meses)<input name="edad_meses" type="number" min="0" max="400" /></label>
+        </div>
+        <label>URL de la foto<input name="foto_url" type="url" placeholder="https://…" /></label>
+        <label>Descripción<textarea name="descripcion" rows="3" maxlength="500"></textarea></label>
+        <button class="btn primario" type="submit">Guardar mascota</button>
+      </form>
+    </section>
+
+    <!-- ============ SISTEMA ============ -->
+    <section id="vista-sistema" class="vista">
+      <div class="encabezado-vista">
+        <div>
+          <h2>Estado del sistema</h2>
+          <p class="sub">Dos servicios independientes que se comunican por HTTP/REST con JSON.</p>
+        </div>
+        <button id="btn-revisar" class="btn">Revisar de nuevo</button>
+      </div>
+      <div class="grid-sistema">
+        <article class="tarjeta servicio" id="srv-mascotas">
+          <h3>API 1 · Mascotas</h3>
+          <p class="url"></p>
+          <p class="estado-srv">Revisando…</p>
+          <a class="btn" target="_blank" rel="noopener">Abrir Swagger</a>
+        </article>
+        <article class="tarjeta servicio" id="srv-adopciones">
+          <h3>API 2 · Adopciones</h3>
+          <p class="url"></p>
+          <p class="estado-srv">Revisando…</p>
+          <p class="dependencia"></p>
+          <a class="btn" target="_blank" rel="noopener">Abrir Swagger</a>
+        </article>
+      </div>
+      <article class="tarjeta flujo">
+        <h3>Cómo viaja una adopción</h3>
+        <ol>
+          <li>El frontend envía la solicitud a la <b>API de Adopciones</b>.</li>
+          <li>Adopciones pregunta a la <b>API de Mascotas</b> si el animal existe y no está adoptado.</li>
+          <li>Guarda la solicitud y pide a Mascotas cambiar el estado a <code>en_proceso</code>.</li>
+          <li>Al aprobar, Adopciones marca la solicitud y pide a Mascotas el estado <code>adoptada</code>. Si Mascotas falla, la aprobación se revierte.</li>
+          <li>Las demás solicitudes pendientes de esa mascota pasan a <code>rechazada</code>.</li>
+        </ol>
+      </article>
+    </section>
+  </main>
+
+  <!-- ============ MODAL SOLICITUD ============ -->
+  <dialog id="modal-solicitud">
+    <form id="form-solicitud" method="dialog" class="formulario">
+      <h3>Solicitar la adopción de <span id="modal-nombre"></span></h3>
+      <input type="hidden" name="mascota_id" />
+      <div class="fila">
+        <label>Nombre completo *<input name="nombre_solicitante" required minlength="3" maxlength="100" /></label>
+        <label>Documento *<input name="documento" required minlength="5" maxlength="20" pattern="[0-9A-Za-z\-]+" /></label>
+      </div>
+      <div class="fila">
+        <label>Correo *<input name="email" type="email" required maxlength="120" /></label>
+        <label>Teléfono *<input name="telefono" required minlength="7" maxlength="20" /></label>
+      </div>
+      <label>Ciudad<input name="ciudad" maxlength="60" /></label>
+      <label>¿Por qué quieres adoptar? *<textarea name="motivo" rows="3" required minlength="10" maxlength="600"
+        placeholder="Cuéntanos sobre tu hogar, tu tiempo disponible y otras mascotas."></textarea></label>
+      <div class="acciones">
+        <button type="button" class="btn" data-cerrar>Cancelar</button>
+        <button type="submit" class="btn primario" value="enviar">Enviar solicitud</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ============ MODAL DECISIÓN ============ -->
+  <dialog id="modal-decision">
+    <form id="form-decision" method="dialog" class="formulario">
+      <h3 id="decision-titulo"></h3>
+      <p id="decision-texto" class="sub"></p>
+      <label>Observación (opcional)<textarea name="observacion" rows="2" maxlength="300"></textarea></label>
+      <div class="acciones">
+        <button type="button" class="btn" data-cerrar>Cancelar</button>
+        <button type="submit" class="btn primario" id="decision-confirmar">Confirmar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toasts" aria-live="polite"></div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

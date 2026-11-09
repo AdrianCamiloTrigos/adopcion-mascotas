@@ -1,0 +1,21 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.18, pytest-9.1.1, pluggy-1.6.0 -- python
+rootdir: /home/claude/adopcion-mascotas
+plugins: platformdirs-4.13.5, anyio-4.15.1
+collecting ... collected 13 items
+
+tests/test_integracion.py::test_01_ambos_servicios_responden PASSED      [  7%]
+tests/test_integracion.py::test_02_swagger_publicado_en_ambas_apis PASSED [ 15%]
+tests/test_integracion.py::test_03_solicitud_cambia_mascota_a_en_proceso PASSED [ 23%]
+tests/test_integracion.py::test_04_solicitud_para_mascota_inexistente_da_404 PASSED [ 30%]
+tests/test_integracion.py::test_05_misma_persona_no_duplica_solicitud_pendiente PASSED [ 38%]
+tests/test_integracion.py::test_06_proceso_completo_de_adopcion PASSED   [ 46%]
+tests/test_integracion.py::test_07_no_se_solicita_una_mascota_adoptada PASSED [ 53%]
+tests/test_integracion.py::test_08_no_se_aprueba_dos_veces_la_misma_solicitud PASSED [ 61%]
+tests/test_integracion.py::test_09_aprobaciones_simultaneas_solo_una_gana PASSED [ 69%]
+tests/test_integracion.py::test_10_rechazar_la_ultima_pendiente_libera_la_mascota PASSED [ 76%]
+tests/test_integracion.py::test_11_mascota_adoptada_no_vuelve_a_disponible PASSED [ 84%]
+tests/test_integracion.py::test_12_cambio_de_estado_exige_clave_de_servicio PASSED [ 92%]
+tests/test_integracion.py::test_13_no_se_elimina_mascota_con_proceso_en_curso PASSED [100%]
+
+============================== 13 passed in 0.85s ==============================
